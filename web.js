@@ -20,6 +20,10 @@ require('./config')(app);
 // Load view helpers.
 require('./lib/helpers')(app);
 
+if (app.enabled('gzip')) {
+    app.use(express.compress());
+}
+
 if (app.get('env') === 'development') {
     app.use(express.responseTime());
     app.use(express.logger('tiny'));

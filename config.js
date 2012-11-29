@@ -14,6 +14,9 @@ module.exports = function (app) {
     // Email address for this blog's author.
     app.set('authorEmail', 'blogger@example.com');
 
+    // Enable or disable gzip compression.
+    app.enable('gzip');
+
     // Enable or disable legacy Thoth redirects.
     app.disable('legacyRedirects');
 
