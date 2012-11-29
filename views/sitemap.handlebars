@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>{{settings.siteUrl}}</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    {{#pages}}
+        <url>
+            <loc>{{getUrl url}}</loc>
+            <lastmod>{{w3cDate updated}}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.6</priority>
+        </url>
+    {{/pages}}
+
+    {{#posts}}
+        <url>
+            <loc>{{getUrl url}}</loc>
+            <lastmod>{{w3cDate updated}}</lastmod>
+            <changefreq>weekly</changefreq>
+        </url>
+    {{/posts}}
+</urlset>

@@ -1,0 +1,20 @@
+{
+    "name": "lectroid-thoth-importer",
+    "version": "0.0.1",
+
+    "engines": {
+        "node": "0.8.x"
+    },
+
+    "dependencies": {
+        "async"     : "0.1.22",
+        "dateformat": "1.0.2-1.2.3",
+        "libyaml"   : "0.2.1",
+        "sqlite3"   : "2.1.5"
+    },
+
+    "devDependencies": {
+    },
+
+    "private": true
+}

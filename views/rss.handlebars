@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>{{settings.siteName}}</title>
+        <link>{{settings.siteUrl}}</link>
+        <managingEditor>{{settings.authorEmail}} ({{settings.author}})</managingEditor>
+        <webMaster>{{settings.authorEmail}} ({{settings.author}})</webMaster>
+        <docs>http://backend.userland.com/rss</docs>
+        <ttl>60</ttl>
+        <atom:link rel="self" type="application/rss+xml" href="{{getUrl "/rss"}}"/>
+
+        {{#posts}}
+            <item>
+                <title>{{title}}</title>
+                <link>{{getUrl url}}</link>
+                <guid isPermaLink="true">{{getUrl url}}</guid>
+                <pubDate>{{rfc822Date date}}</pubDate>
+                <description>
+                    {{html}}
+                </description>
+
+                {{#tags}}
+                    <category domain="{{getTagUrl .}}">{{.}}</category>
+                {{/tags}}
+            </item>
+        {{/posts}}
+    </channel>
+</rss>

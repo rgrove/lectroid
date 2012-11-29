@@ -1,0 +1,12 @@
+<h1 class="special">Posts tagged with &ldquo;{{tag}}&rdquo;</h1>
+
+{{> pagination-stats}}
+{{> pagination}}
+
+<section class="posts">
+    {{#posts}}
+        {{> post}}
+    {{/posts}}
+</section>
+
+{{> pagination}}
