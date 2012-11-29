@@ -101,6 +101,14 @@ app.get('/post/:slug', function (req, res, next) {
     })
 });
 
+app.get('/robots.txt', function (req, res) {
+    res.type('text/plain');
+
+    res.render('robots', {
+        layout: false
+    });
+});
+
 app.get('/rss', function (req, res, next) {
     var posts = Post.recent().slice(0, 10);
 
