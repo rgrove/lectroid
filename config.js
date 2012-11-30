@@ -24,7 +24,7 @@ module.exports = function (app) {
     if (app.get('env') === 'production') {
 
         // Absolute base URL for this site.
-        app.set('siteUrl', 'http://example.com/');
+        app.set('siteUrl', 'http://www.example.com/');
 
     }
 };
