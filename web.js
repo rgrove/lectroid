@@ -33,7 +33,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(app.router);
 
 // -- Routes -------------------------------------------------------------------
-app.get('/', function (req, res) {
+app.get('/', reloadPosts, function (req, res) {
     if (req.query.page === '1') {
         res.redirect(301, '/');
         return;
@@ -84,7 +84,7 @@ app.get('/page/:slug', function (req, res, next) {
     })
 });
 
-app.get('/post/:slug', function (req, res, next) {
+app.get('/post/:slug', reloadPosts, function (req, res, next) {
     var post = Post.getBySlug(req.params.slug);
 
     if (!post) {
@@ -113,7 +113,7 @@ app.get('/robots.txt', function (req, res) {
     });
 });
 
-app.get('/rss', function (req, res, next) {
+app.get('/rss', reloadPosts, function (req, res, next) {
     var posts = Post.recent().slice(0, 10);
 
     Post.render(posts, function (err) {
@@ -129,7 +129,7 @@ app.get('/rss', function (req, res, next) {
     });
 });
 
-app.get('/sitemap', function (req, res) {
+app.get('/sitemap', reloadPosts, function (req, res) {
     res.type('text/xml');
 
     res.render('sitemap', {
@@ -139,7 +139,7 @@ app.get('/sitemap', function (req, res) {
     });
 });
 
-app.get('/tag/:tag', function (req, res, next) {
+app.get('/tag/:tag', reloadPosts, function (req, res, next) {
     var tag   = req.params.tag.replace(/\+/g, ' '),
         posts = Post.getByTag(tag);
 
@@ -221,6 +221,17 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error/500', {error: err});
 });
+
+// -- Middleware ---------------------------------------------------------------
+
+// Reloads posts on every request in development mode.
+function reloadPosts (req, res, next) {
+    if (app.get('env') === 'development') {
+        Post.initialize();
+    }
+
+    next();
+}
 
 // -- Server -------------------------------------------------------------------
 var port = process.env.PORT || 5000;
