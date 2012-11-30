@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
+// -- Node modules -------------------------------------------------------------
+var fs = require('fs');
+
 // -- Lectroid modules ---------------------------------------------------------
-var Page      = require('./lib/page'),
+var Content   = require('./lib/content'),
+    Page      = require('./lib/page'),
     Paginator = require('./lib/paginator'),
     Post      = require('./lib/post');
 
@@ -27,13 +31,26 @@ if (app.enabled('gzip')) {
 if (app.get('env') === 'development') {
     app.use(express.responseTime());
     app.use(express.logger('tiny'));
+
+    // Reload content from disk every time it's rendered.
+    Content.reload = true;
+
+    // Reload posts when one is added or deleted. In Node 0.8.x on OS X,
+    // fs.watch() only picks up file creations, deletions, and renamed. It
+    // doesn't pick up changes to existing files, so unfortunately we can only
+    // rely on this to detect new or deleted posts. This has supposedly been
+    // fixed in Node 0.9.x.
+    fs.watch(__dirname + '/content/post', function () {
+        console.log('Reloading posts.');
+        Post.initialize();
+    });
 }
 
 app.use(express.static(__dirname + '/public'));
 app.use(app.router);
 
 // -- Routes -------------------------------------------------------------------
-app.get('/', reloadPosts, function (req, res) {
+app.get('/', function (req, res) {
     if (req.query.page === '1') {
         res.redirect(301, '/');
         return;
@@ -84,7 +101,7 @@ app.get('/page/:slug', function (req, res, next) {
     })
 });
 
-app.get('/post/:slug', reloadPosts, function (req, res, next) {
+app.get('/post/:slug', function (req, res, next) {
     var post = Post.getBySlug(req.params.slug);
 
     if (!post) {
@@ -113,7 +130,7 @@ app.get('/robots.txt', function (req, res) {
     });
 });
 
-app.get('/rss', reloadPosts, function (req, res, next) {
+app.get('/rss', function (req, res, next) {
     var posts = Post.recent().slice(0, 10);
 
     Post.render(posts, function (err) {
@@ -129,7 +146,7 @@ app.get('/rss', reloadPosts, function (req, res, next) {
     });
 });
 
-app.get('/sitemap', reloadPosts, function (req, res) {
+app.get('/sitemap', function (req, res) {
     res.type('text/xml');
 
     res.render('sitemap', {
@@ -139,7 +156,7 @@ app.get('/sitemap', reloadPosts, function (req, res) {
     });
 });
 
-app.get('/tag/:tag', reloadPosts, function (req, res, next) {
+app.get('/tag/:tag', function (req, res, next) {
     var tag   = req.params.tag.replace(/\+/g, ' '),
         posts = Post.getByTag(tag);
 
@@ -221,17 +238,6 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error/500', {error: err});
 });
-
-// -- Middleware ---------------------------------------------------------------
-
-// Reloads posts on every request in development mode.
-function reloadPosts (req, res, next) {
-    if (app.get('env') === 'development') {
-        Post.initialize();
-    }
-
-    next();
-}
 
 // -- Server -------------------------------------------------------------------
 var port = process.env.PORT || 5000;
