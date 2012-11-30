@@ -140,7 +140,7 @@ app.get('/sitemap', function (req, res) {
 });
 
 app.get('/tag/:tag', function (req, res, next) {
-    var tag   = req.params.tag,
+    var tag   = req.params.tag.replace(/\+/g, ' '),
         posts = Post.getByTag(tag);
 
     if (!posts) {
