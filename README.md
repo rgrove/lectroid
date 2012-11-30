@@ -99,7 +99,7 @@ Customizing Lectroid
 --------------------
 
 Since Lectroid is distributed via a git project rather than via downloadable
-archives or an installable app, the best way to customize it is to simple clone
+archives or an installable app, the best way to customize it is to simply clone
 or fork the main Lectroid repo, then create a branch where your changes will
 live.
 
