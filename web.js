@@ -203,6 +203,10 @@ if (app.enabled('legacyRedirects')) {
         res.redirect(301, '/?page=' + encodeURIComponent(req.params.page));
     });
 
+    app.get('/index', function (req, res) {
+        res.redirect(301, '/');
+    });
+
     app.get('/tag/:tag/:page', function (req, res) {
         res.redirect(301, '/tag/' + encodeURIComponent(req.params.tag) +
                 '?page=' + encodeURIComponent(req.params.page));
