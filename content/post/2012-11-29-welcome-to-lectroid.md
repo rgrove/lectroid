@@ -39,7 +39,7 @@ All of these fields are optional except the `title` field.
 
   * **title** - The title of the post, which will be rendered in a heading above the content of the post.
 
-  * **updated** - The date (and optionally time) when the post was last updated. If this field is not provided, Lectroid will use the file's modification time. This value isn't displayed to users in Lectroid's default templates, but is used in the sitemap that's shared with search robots.
+  * **updated** - The date (and optionally time) when the post was last updated. If this field is not provided, Lectroid will use the creation date. This value isn't displayed to users in Lectroid's default templates, but is used in the sitemap that's shared with search robots.
 
 After the YAML front matter is the body of the post, which in this case is written in the [Markdown](http://daringfireball.net/projects/markdown/) format, since the post has a `.md` file extension. If you give a post a `.html` extension, then Lectroid will treat the body as raw HTML.
 
