@@ -6,13 +6,14 @@
             </a>
         {% endif %}
 
-        {% if pagination.navigation %}
-            {% if pagination.isCurrentPage %}
-                <strong>{{pagination.page}}</strong>
+        {# TODO: figure out why the number of pages seems to increase after reloading in dev mode #}
+        {% for page in pagination.navigation %}
+            {% if page.isCurrentPage %}
+                <strong>{{page.page}}</strong>
             {% else %}
-                <a href="{{pagination.url}}">{{pagination.page}}</a>
+                <a href="{{page.url}}">{{page.page}}</a>
             {% endif %}
-        {% endif %}
+        {% endfor %}
 
         {% if pagination.nextUrl %}
             <a rel="next" class="next" href="{{pagination.nextUrl}}">
