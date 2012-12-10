@@ -6,20 +6,20 @@
         <priority>1.0</priority>
     </url>
 
-    {{#pages}}
+    {% for page in pages %}
         <url>
-            <loc>{{getUrl url}}</loc>
-            <lastmod>{{w3cDate updated}}</lastmod>
+            <loc>{{page.url|absoluteUrl}}</loc>
+            <lastmod>{{page.updated|date("c")}}</lastmod>
             <changefreq>weekly</changefreq>
             <priority>0.6</priority>
         </url>
-    {{/pages}}
+    {% endfor %}
 
-    {{#posts}}
+    {% for post in posts %}
         <url>
-            <loc>{{getUrl url}}</loc>
-            <lastmod>{{w3cDate updated}}</lastmod>
+            <loc>{{post.url|absoluteUrl}}</loc>
+            <lastmod>{{post.updated|date("c")}}</lastmod>
             <changefreq>weekly</changefreq>
         </url>
-    {{/posts}}
+    {% endfor %}
 </urlset>

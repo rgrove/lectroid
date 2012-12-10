@@ -10,20 +10,32 @@ var Content   = require('./lib/content'),
     Post      = require('./lib/post');
 
 // -- Express initialization ---------------------------------------------------
-var express = require('express'),
-    app     = express();
-
-app.engine('handlebars', require('./lib/handlebars-engine'));
-
-app.set('view engine', 'handlebars');
-app.set('views', __dirname + '/views');
+var consolidate = require('consolidate'),
+    express     = require('express'),
+    swig        = require('swig'),
+    app         = express();
 
 // Load config.
 require('./config')(app);
 
-// Load view helpers.
-require('./lib/helpers')(app);
+// Configure Swig.
+swig.init({
+    allowErrors: true,
+    cache      : app.enabled('view cache'),
+    filters    : require('./lib/filters')(app),
+    root       : __dirname + '/views'
+});
 
+app.engine('swig', consolidate.swig);
+
+app.set('view engine', 'swig');
+app.set('views', __dirname + '/views');
+app.set('view options', {layout: false});
+
+// Make the year available to all templates.
+app.locals.year = new Date().getFullYear();
+
+// Configure Express.
 if (app.enabled('gzip')) {
     app.use(express.compress());
 }
@@ -36,7 +48,7 @@ if (app.get('env') === 'development') {
     Content.reload = true;
 
     // Reload posts when one is added or deleted. In Node 0.8.x on OS X,
-    // fs.watch() only picks up file creations, deletions, and renamed. It
+    // fs.watch() only picks up file creations, deletions, and renames. It
     // doesn't pick up changes to existing files, so unfortunately we can only
     // rely on this to detect new or deleted posts. This has supposedly been
     // fixed in Node 0.9.x.
@@ -50,7 +62,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(app.router);
 
 // -- Routes -------------------------------------------------------------------
-app.get('/', function (req, res) {
+app.get('/', function (req, res, next) {
     if (req.query.page === '1') {
         res.redirect(301, '/');
         return;
@@ -74,8 +86,7 @@ app.get('/', function (req, res) {
 
         res.render('index', {
             pagination: paginator,
-            posts     : posts,
-            title     : app.get('siteName')
+            posts     : posts
         });
     });
 });
@@ -95,10 +106,9 @@ app.get('/page/:slug', function (req, res, next) {
         }
 
         res.render('page', {
-            page : page,
-            title: page.title
+            page: page
         });
-    })
+    });
 });
 
 app.get('/post/:slug', function (req, res, next) {
@@ -116,18 +126,14 @@ app.get('/post/:slug', function (req, res, next) {
         }
 
         res.render('post', {
-            post : post,
-            title: post.title + ' - ' + app.get('siteName')
+            post: post
         });
-    })
+    });
 });
 
 app.get('/robots.txt', function (req, res) {
     res.type('text/plain');
-
-    res.render('robots', {
-        layout: false
-    });
+    res.render('robots');
 });
 
 app.get('/rss', function (req, res, next) {
@@ -140,8 +146,7 @@ app.get('/rss', function (req, res, next) {
         }
 
         res.render('rss', {
-            layout: false,
-            posts : posts,
+            posts: posts
         });
     });
 });
@@ -150,9 +155,8 @@ app.get('/sitemap', function (req, res) {
     res.type('text/xml');
 
     res.render('sitemap', {
-        layout: false,
-        pages : Page.recent(),
-        posts : Post.recent()
+        pages: Page.recent(),
+        posts: Post.recent()
     });
 });
 
@@ -186,10 +190,9 @@ app.get('/tag/:tag', function (req, res, next) {
         res.render('tag', {
             pagination: paginator,
             posts     : posts,
-            tag       : tag,
-            title     : 'Posts tagged with "' + tag + '" - ' + app.get('siteName')
+            tag       : tag
         });
-    })
+    });
 });
 
 // -- Legacy redirects ---------------------------------------------------------
@@ -221,6 +224,8 @@ app.use(function (req, res, next) {
     res.set('X-Robots-Tag', 'noindex');
 
     if (req.accepts('html')) {
+        res.type('text/html');
+
         res.render('error/404', {
             url: req.url
         });
@@ -240,7 +245,23 @@ app.use(function (err, req, res, next) {
     console.error(err.stack);
 
     res.status(err.status || 500);
-    res.render('error/500', {error: err});
+
+    if (req.accepts('html')) {
+        res.type('text/html');
+
+        res.render('error/500', {
+            error: err
+        });
+
+        return;
+    }
+
+    if (req.accepts('json')) {
+        res.send({error: '500 Internal Server Error'});
+        return;
+    }
+
+    res.type('txt').send('Internal Server Error');
 });
 
 // -- Server -------------------------------------------------------------------

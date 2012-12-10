@@ -27,4 +27,5 @@ module.exports = function (app) {
         app.set('siteUrl', 'http://www.example.com/');
 
     }
+
 };
