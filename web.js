@@ -36,6 +36,8 @@ app.set('view options', {layout: false});
 app.locals.year = new Date().getFullYear();
 
 // Configure Express.
+app.disable('x-powered-by');
+
 if (app.enabled('gzip')) {
     app.use(express.compress());
 }
@@ -57,6 +59,13 @@ if (app.get('env') === 'development') {
         Post.initialize();
     });
 }
+
+// Set a few security-related headers.
+app.use(function (req, res, next) {
+    res.set('X-Content-Type-Options', 'nosniff');
+    res.set('X-Frame-Options', 'SAMEORIGIN');
+    next();
+});
 
 app.use(express.static(__dirname + '/public'));
 app.use(app.router);
