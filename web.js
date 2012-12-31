@@ -121,10 +121,17 @@ app.get('/page/:slug', function (req, res, next) {
 });
 
 app.get('/post/:slug', function (req, res, next) {
-    var post = Post.getBySlug(req.params.slug);
+    var slug = req.params.slug,
+        post = Post.getBySlug(slug);
 
     if (!post) {
         next();
+        return;
+    }
+
+    // Redirect legacy Thoth id-based URLs to canonical slug-based URLs.
+    if (slug !== post.slug) {
+        res.redirect(301, '/post/' + encodeURIComponent(post.slug));
         return;
     }
 
