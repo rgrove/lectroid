@@ -72,20 +72,15 @@ app.use(app.router);
 
 // -- Routes -------------------------------------------------------------------
 app.get('/', function (req, res, next) {
-    if (req.query.page === '1') {
+    var page = req.query.page;
+
+    if (page === '1') {
         res.redirect(301, '/');
         return;
     }
 
-    var posts = Post.recent(),
-
-        paginator = new Paginator(posts, '/?page=:page', {
-            labelNext: 'Older &raquo;',
-            labelPrev: '&laquo; Newer',
-            page     : req.query.page || 1
-        });
-
-    posts = paginator.itemsOnPage();
+    var pagination = new Paginator(Post.recent(), '/?page=:page', {page: page || 1}),
+        posts      = pagination.itemsOnPage();
 
     Post.render(posts, function (err) {
         if (err) {
@@ -94,7 +89,7 @@ app.get('/', function (req, res, next) {
         }
 
         res.render('index', {
-            pagination: paginator,
+            pagination: pagination,
             posts     : posts
         });
     });
@@ -114,9 +109,7 @@ app.get('/page/:slug', function (req, res, next) {
             return;
         }
 
-        res.render('page', {
-            page: page
-        });
+        res.render('page', {page: page});
     });
 });
 
@@ -141,9 +134,7 @@ app.get('/post/:slug', function (req, res, next) {
             return;
         }
 
-        res.render('post', {
-            post: post
-        });
+        res.render('post', {post: post});
     });
 });
 
@@ -161,9 +152,7 @@ app.get('/rss', function (req, res, next) {
             return;
         }
 
-        res.render('rss', {
-            posts: posts
-        });
+        res.render('rss', {posts: posts});
     });
 });
 
@@ -185,13 +174,11 @@ app.get('/tag/:tag', function (req, res, next) {
         return;
     }
 
-    var paginator = new Paginator(posts, '/tag/' + encodeURIComponent(tag) + '?page=:page', {
-            labelNext: 'Older &raquo;',
-            labelPrev: '&laquo; Newer',
-            page     : req.query.page || 1
+    var pagination = new Paginator(posts, '/tag/' + encodeURIComponent(tag) + '?page=:page', {
+            page: req.query.page || 1
         });
 
-    posts = paginator.itemsOnPage();
+    posts = pagination.itemsOnPage();
 
     Post.render(posts, function (err) {
         if (err) {
@@ -204,7 +191,7 @@ app.get('/tag/:tag', function (req, res, next) {
         res.set('X-Robots-Tag', 'noindex');
 
         res.render('tag', {
-            pagination: paginator,
+            pagination: pagination,
             posts     : posts,
             tag       : tag
         });
