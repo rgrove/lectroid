@@ -1,5 +1,7 @@
 {% extends "layouts/default.swig" %}
 
+{% block title %}Not Found - {{settings.siteName}}{% endblock %}
+
 {% block pageBody %}
     <h1>404 Not Found</h1>
 

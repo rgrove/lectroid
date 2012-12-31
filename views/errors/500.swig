@@ -1,5 +1,7 @@
 {% extends "layouts/default.swig" %}
 
+{% block title %}Internal Server Error - {{settings.siteName}}{% endblock %}
+
 {% block pageBody %}
     <h1>500 Internal Server Error</h1>
 

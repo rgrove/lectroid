@@ -242,7 +242,7 @@ app.use(function (req, res, next) {
     if (req.accepts('html')) {
         res.type('text/html');
 
-        res.render('error/404', {
+        res.render('errors/404', {
             url: req.url
         });
 
@@ -265,7 +265,7 @@ app.use(function (err, req, res, next) {
     if (req.accepts('html')) {
         res.type('text/html');
 
-        res.render('error/500', {
+        res.render('errors/500', {
             error: err
         });
 
