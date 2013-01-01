@@ -76,6 +76,7 @@ function importPosts(err, rows) {
             }
 
             if (!tagMapRows.length) {
+                delete metadata.tags;
                 writePost();
                 return;
             }
