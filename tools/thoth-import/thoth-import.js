@@ -75,6 +75,11 @@ function importPosts(err, rows) {
                 throw err;
             }
 
+            if (!tagMapRows.length) {
+                writePost();
+                return;
+            }
+
             tagMapRows.forEach(function (tagMap) {
                 db.get('SELECT * FROM tags WHERE id = ?', tagMap.tag_id, function (err, tag) {
                     if (err) {
