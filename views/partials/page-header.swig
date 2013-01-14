@@ -5,9 +5,9 @@
         </a>
     </h1>
 
-    <h2 class="author">
+    <p class="author">
         <span class="by">by</span> <a href="/page/about/">{{settings.author}}</a>
-    </h2>
+    </p>
 
     <p class="author-bio">
         This is where I write about things and stuff, and also monkeys.
