@@ -1,15 +1,15 @@
-<article id="post-{{slug}}" class="post content{% if imported %} imported{% endif %}">
+<article id="post-{{slug}}" class="post hentry content{% if imported %} imported{% endif %}">
     <header class="hd">
-        <h1 class="title">
+        <h1 class="title entry-title">
             <a href="{{url}}" rel="bookmark">{{title}}</a>
         </h1>
 
-        <time class="date" datetime="{{date}}" pubdate>
+        <time class="date published" datetime="{{date}}" pubdate>
             <a href="{{url}}" rel="bookmark">{{date|date("Y-m-d")}}</a>
         </time>
     </header>
 
-    <div class="bd">
+    <div class="bd entry-content">
         {{html|raw}}
     </div>
 
