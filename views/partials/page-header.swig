@@ -1,4 +1,4 @@
-<header id="hd">
+<div id="hd">
     <h1 class="site-name">
         <a href="/">
             {{settings.siteName}}
@@ -12,4 +12,4 @@
     <p class="author-bio">
         This is where I write about things and stuff, and also monkeys.
     </p>
-</header>
+</div>
