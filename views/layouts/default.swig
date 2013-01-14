@@ -26,6 +26,8 @@
         {% block pageFooter %}
             {% include "partials/page-footer.swig" %}
         {% endblock %}
+
+        {% include "partials/author.swig" %}
     </div>
 
     {% block js %}{% endblock %}

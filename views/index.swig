@@ -11,8 +11,6 @@
     {% endif %}
 
     <section class="posts hfeed">
-        {% include "partials/author.swig" %}
-
         {% for post in posts %}
             {% include "partials/post.swig" with post %}
         {% endfor %}
