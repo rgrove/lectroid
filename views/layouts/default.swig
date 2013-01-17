@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{% block title %}{{settings.siteName}}{% endblock %}</title>
+    <title>
+        {% block title %}
+            {{settings.siteName}}
+            {% if pagination && pagination.page > 1 %}
+                - Page {{pagination.page}} of {{pagination.totalPages}}
+            {% endif %}
+        {% endblock %}
+    </title>
 
     {% block head %}
         <meta name="viewport" content="width=device-width">
