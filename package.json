@@ -12,7 +12,7 @@
         "express"    : "3.0.3",
         "glob"       : "3.1.12",
         "js-yaml"    : "2.1.0",
-        "marked"     : "0.2.6",
+        "marked"     : "0.2.9",
         "swig"       : "0.13.3",
         "underscore" : "1.4.3"
     },
