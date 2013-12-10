@@ -146,6 +146,8 @@ app.get('/robots.txt', function (req, res) {
 app.get('/rss', function (req, res, next) {
     var posts = Post.recent().slice(0, 10);
 
+    res.type(req.accepts(['rss', 'xml', 'text']));
+
     Post.render(posts, function (err) {
         if (err) {
             next(err);
